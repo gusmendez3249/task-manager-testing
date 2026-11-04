@@ -1,0 +1,27 @@
+# Local development and test databases only. Synthetic credentials; never reuse them elsewhere.
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: taskmanager
+      POSTGRES_PASSWORD: taskmanager_local_only
+      POSTGRES_DB: taskmanager
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  # Isolated database for integration tests (data is wiped by the test suite).
+  db-test:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: taskmanager
+      POSTGRES_PASSWORD: taskmanager_local_only
+      POSTGRES_DB: taskmanager_test
+    ports:
+      - "5433:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+
+volumes:
+  db-data:
