@@ -101,6 +101,26 @@ jobs:
           name: task-manager-debug-apk
           path: mobile/build/app/outputs/flutter-apk/app-debug.apk
 
+  web-build:
+    name: Web build (used for evidence screenshots)
+    runs-on: ubuntu-latest
+    needs: flutter
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter create --platforms=web --org mx.edu.utng --project-name task_manager .
+      - run: flutter build web --release --dart-define=API_BASE_URL=http://localhost:3000
+      - uses: actions/upload-artifact@v4
+        with:
+          name: task-manager-web
+          path: mobile/build/web
+
   k6-smoke:
     name: k6 performance smoke (CI-local API only)
     runs-on: ubuntu-latest
