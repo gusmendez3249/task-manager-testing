@@ -59,12 +59,17 @@ class TaskListPanel extends StatelessWidget {
     if (tasks.isEmpty) {
       return const Center(child: Text('No tasks yet.'));
     }
-    return ListView.builder(
-      // Leaves room so the floating "Add task" button never covers the last row.
-      padding: const EdgeInsets.only(bottom: 96),
-      itemCount: tasks.length,
-      itemBuilder: itemBuilder ??
-          (context, index) => ListTile(title: Text(tasks[index])),
+    // ListTile needs a Material ancestor; this keeps the panel usable on its own
+    // (for example directly as MaterialApp.home in widget tests).
+    return Material(
+      type: MaterialType.transparency,
+      child: ListView.builder(
+        // Leaves room so the floating "Add task" button never covers the last row.
+        padding: const EdgeInsets.only(bottom: 96),
+        itemCount: tasks.length,
+        itemBuilder: itemBuilder ??
+            (context, index) => ListTile(title: Text(tasks[index])),
+      ),
     );
   }
 }
