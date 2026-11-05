@@ -138,11 +138,18 @@ class _TaskListScreenState extends State<TaskListScreen> {
   Widget _buildTask(BuildContext context, int index) {
     final task = _tasks[index];
     final theme = Theme.of(context);
-    return CheckboxListTile(
+    // BUG-003: CheckboxListTile merges the semantics of everything inside it, so the
+    // edit/delete buttons were not separate nodes for TalkBack/VoiceOver and
+    // activating "delete" toggled the task instead. A ListTile with its own Checkbox
+    // keeps each button as its own accessible control.
+    return ListTile(
       key: ValueKey('task-${task.id}'),
-      controlAffinity: ListTileControlAffinity.leading,
-      value: task.completed,
-      onChanged: (value) => _toggle(task, value ?? false),
+      onTap: () => _toggle(task, !task.completed),
+      leading: Checkbox(
+        value: task.completed,
+        semanticLabel: task.completed ? 'Completed' : 'Mark as completed',
+        onChanged: (value) => _toggle(task, value ?? false),
+      ),
       title: Text(
         task.title,
         style: task.completed
@@ -155,7 +162,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
         style: theme.textTheme.bodySmall
             ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
       ),
-      secondary: Row(
+      trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(

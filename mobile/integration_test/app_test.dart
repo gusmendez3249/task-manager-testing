@@ -83,7 +83,7 @@ void main() {
     await tester.tap(find.byKey(const Key('save-task-button')));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.widgetWithText(CheckboxListTile, 'Check release flow'));
+    await tester.tap(find.widgetWithText(ListTile, 'Check release flow'));
     await tester.pumpAndSettle();
     expect(find.text('Completed'), findsOneWidget);
     expect(find.text('Check release flow'), findsOneWidget);

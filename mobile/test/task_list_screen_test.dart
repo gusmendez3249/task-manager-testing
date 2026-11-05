@@ -80,7 +80,7 @@ void main() {
     backend.seed('Finish report');
     await pumpScreen(tester);
 
-    await tester.tap(find.widgetWithText(CheckboxListTile, 'Finish report'));
+    await tester.tap(find.widgetWithText(ListTile, 'Finish report'));
     await tester.pumpAndSettle();
 
     expect(find.text('Finish report'), findsOneWidget);
@@ -170,6 +170,26 @@ void main() {
     backend.seed('<script>alert(1)</script>');
     await pumpScreen(tester);
     expect(find.text('<script>alert(1)</script>'), findsOneWidget);
+  });
+
+  // Regression for BUG-003 (found while capturing evidence): with CheckboxListTile the
+  // edit/delete buttons were merged into the tile, so a screen-reader "activate" on
+  // Delete toggled the task instead of opening the confirmation.
+  testWidgets('delete is its own accessible control (BUG-003)', (tester) async {
+    final semantics = tester.ensureSemantics();
+    backend.seed('Finish report');
+    await pumpScreen(tester);
+
+    final delete = tester.getSemantics(find.byTooltip('Delete task'));
+    expect(delete.tooltip, 'Delete task');
+    expect(delete.label, isNot(contains('Finish report')));
+
+    delete.owner!.performAction(delete.id, SemanticsAction.tap);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Delete task?'), findsOneWidget);
+    expect(backend.tasks.single['completed'], isFalse);
+    semantics.dispose();
   });
 
   // Section 11: accessibility checks that can be automated.
