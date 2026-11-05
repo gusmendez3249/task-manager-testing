@@ -31,3 +31,7 @@
 | Navegación con teclado / switch (Tab, Enter) | ☐ |
 
 **Ejercicio:** activar TalkBack y el tamaño de fuente máximo, crear una tarea, provocar el error de título vacío y anotar controles sin etiqueta o recortados.
+
+## Hallazgo: BUG-003
+
+Al manejar la app por su árbol de accesibilidad, el botón Borrar de cada fila estaba fusionado con la casilla (`CheckboxListTile` usa `MergeSemantics`): activarlo completaba la tarea. Las guías automáticas no lo detectaron. Ya está corregido y tiene prueba de regresión ([03-reporte-de-bug.md](03-reporte-de-bug.md#bug-003--para-lectores-de-pantalla-borrar-marca-la-tarea-como-completada-encontrado-al-capturar-evidencias)).

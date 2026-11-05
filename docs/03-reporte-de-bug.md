@@ -34,3 +34,22 @@
 | **Severidad** | **Baja** — no hay pérdida de datos, pero rompe AC-2 y genera filas "vacías" confusas. |
 | **Prioridad** | **Media** — fácil de corregir y viola un criterio de aceptación. |
 | **Estado** | **Corregido.** `validateTitle` (API y app) ahora exige al menos un carácter visible. Pruebas de regresión: `backend/tests/unit/validation.test.js` › *rejects a title with only invisible characters…* y `mobile/test/validation_test.dart` › *rejects zero-width space only (BUG-002)*. |
+
+---
+
+## BUG-003 — Para lectores de pantalla, "Borrar" marca la tarea como completada (encontrado al capturar evidencias)
+
+| Campo | Contenido |
+|-------|-----------|
+| **Resumen** | Con la semántica de accesibilidad activa, activar el botón **Delete task** de una fila marca la tarea como completada en lugar de abrir la confirmación de borrado. Los botones Editar y Borrar no existen como controles independientes. |
+| **Entorno** | Build web de la app (artefacto de CI, Flutter 3.47.9), Chrome headless con la semántica de Flutter habilitada; API 1.0.0 local en modo memoria. 2026-11-04. Afecta igual a TalkBack/VoiceOver porque la causa está en el árbol de semántica. |
+| **Precondiciones** | Cuenta sintética con 4 tareas. |
+| **Pasos para reproducir** | 1. Habilitar accesibilidad (lector de pantalla). 2. En *My tasks*, activar el ícono de papelera de la primera tarea. |
+| **Resultado esperado** | Se abre el diálogo *Delete task?*; la tarea no cambia de estado. |
+| **Resultado real** | La tarea pasa a *Completed* y no aparece el diálogo. Las etiquetas "Edit task" y "Delete task" no figuran en el árbol de accesibilidad. |
+| **Evidencia** | `docs/evidencias/bug-003-antes-borrar-marca-tarea.png` |
+| **Causa** | `CheckboxListTile` envuelve su contenido en `MergeSemantics`: los `IconButton` del `secondary` se fusionan con el nodo del checkbox, cuya acción es alternar. |
+| **Severidad** | **Alta** para usuarios de lectores de pantalla: no pueden editar ni borrar, y cambian datos sin querer. |
+| **Prioridad** | **Alta.** |
+| **Estado** | **Corregido.** La fila es un `ListTile` con su propio `Checkbox` (`semanticLabel`) y botones independientes. Prueba de regresión: `mobile/test/task_list_screen_test.dart` › *delete is its own accessible control (BUG-003)*, que activa Borrar por el árbol de semántica y verifica que se abra la confirmación sin completar la tarea. |
+| **Lección** | Las guías automatizadas (`labeledTapTargetGuideline`) pasaban: los botones tenían tooltip, pero estaban fusionados. Una prueba en verde no garantiza que la app sea accesible. |

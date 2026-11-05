@@ -6,6 +6,8 @@ Implementación completa del tutorial *"Become a Better Application Tester: A Ha
 - **API REST Node.js/Express** (`backend/`): PostgreSQL, JWT de acceso + refresh tokens con rotación y detección de reuso, logout y logout-all, límites de tasa, validación y autorización por dueño.
 - **Pruebas en todos los niveles de la pirámide** + documentos de QA (`docs/`) + CI en GitHub Actions.
 
+📸 **Evidencias (capturas):** [EVIDENCIAS.md](EVIDENCIAS.md)
+
 > Solo entornos locales o de prueba. Datos y cuentas sintéticas (`*@example.test`). Nunca pegues tokens reales en reportes ni capturas.
 
 ## Estructura
@@ -83,6 +85,7 @@ Más detalles en [mobile/README.md](mobile/README.md).
 | 1. Mentalidad y plan | [docs/01-plan-de-pruebas.md](docs/01-plan-de-pruebas.md) (criterios de aceptación, pirámide, plan) |
 | 2. Casos de prueba y bug reports | [docs/02-casos-de-prueba.md](docs/02-casos-de-prueba.md), [docs/03-reporte-de-bug.md](docs/03-reporte-de-bug.md) |
 | 3. Exploratoria con charter | [docs/04-sesion-exploratoria.md](docs/04-sesion-exploratoria.md) (encontró BUG-002, ya corregido) |
+| Evidencias (capturas) | [EVIDENCIAS.md](EVIDENCIAS.md) (pruebas, CI, k6, curl, app; BUG-003 encontrado y corregido) |
 | 4. Unitarias | `backend/tests/unit/*`, `mobile/test/task_test.dart`, `mobile/test/validation_test.dart` |
 | 5. Widgets Flutter (+ botón *retry*) | `mobile/test/task_list_panel_test.dart`, `task_list_screen_test.dart`, `login_screen_test.dart` |
 | 6. API e integración | `backend/tests/api/tasks.test.js`, `auth.test.js` |
@@ -99,7 +102,7 @@ Más detalles en [mobile/README.md](mobile/README.md).
 
 | Semana | Enfoque | Resultado en este repo |
 |--------|---------|------------------------|
-| 1 | Mentalidad, plan, casos, exploratoria | Plan, 10 casos, 1 sesión exploratoria, 2 bug reports |
+| 1 | Mentalidad, plan, casos, exploratoria | Plan, 10 casos, 1 sesión exploratoria, 3 bug reports |
 | 2 | Unitarias, widgets, API, integración | Validación de título, estados de la lista, propiedad de tareas |
 | 3 | E2E, límites, seguridad, accesibilidad | Recorrido E2E, tablas de límites, checklist OWASP y a11y |
 | 4 | Rendimiento, compatibilidad, regresión, CI | k6 en CI, matriz de dispositivos, checklist de regresión, workflow |
